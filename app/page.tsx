@@ -1,9 +1,10 @@
 import Image from "next/image";
+import NavigationBar from "./ui/nav-bar";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen">
-      
+    <main className="min-h-screen">
+      <NavigationBar />
     </main>
   );
 }

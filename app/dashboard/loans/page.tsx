@@ -1,8 +1,5 @@
-import { fetchPageCount } from "@/app/lib/data";
-import { BreadCrumps } from "@/app/ui/bread-crumps";
 import { LoansTable } from "@/app/ui/loans/loans-table";
 import PageResizer from "@/app/ui/page-resizer";
-import Pagination from "@/app/ui/pagination";
 
 export default async function Page({
   searchParams,

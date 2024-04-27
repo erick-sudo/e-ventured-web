@@ -37,7 +37,7 @@ export async function LoansTable({
   page: number;
   size: number;
 }) {
-  const loans: LoanOut[] = await fetchLoans(page, size);
+  const loans: LoanOut[] = [] // await fetchLoans(page, size);
 
   return (
     <div className="my-4 p-2 grow flex flex-col gap-3">

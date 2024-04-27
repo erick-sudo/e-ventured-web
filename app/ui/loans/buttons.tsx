@@ -1,13 +1,8 @@
 "use client";
 
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { ModalLink } from "../modal-link";
+import { Button } from "@mui/material";
 
 export function CreateLoan() {
-  return (
-    <ModalLink
-      icon={<PlusIcon className="h-5" />}
-      anchorText="Open Loan"
-    ></ModalLink>
-  );
+  return <Button startIcon={<PlusIcon />}>Create Loan</Button>;
 }
