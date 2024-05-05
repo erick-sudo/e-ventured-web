@@ -35,7 +35,9 @@ export async function fetchLoans(pageNumber: number, pageSize: number) {
       },
     }
   )
-    .then((response) => response.json())
+    .then((response) => {
+      return response.json();
+    })
     .then((data) => {
       if (Array.isArray(data)) {
         return data.map((loan) => loan as LoanOut);

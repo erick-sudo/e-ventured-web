@@ -34,6 +34,7 @@ export type ClientDto = {
   id: string;
   name: string;
   email: string;
+  phone: string;
 };
 
 export type LoanOfficerDto = {

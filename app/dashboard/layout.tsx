@@ -1,128 +1,111 @@
-// import { SizeNav } from "../ui/dashboard/side-nav";
-
-// export default async function Layout({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   return (
-//     <div className="h-screen flex bg-gray-100">
-//       <div className="flex">
-//         <SizeNav />
-//       </div>
-//       <div className="grow overflow-auto flex">{children}</div>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import * as React from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import LogoutIcon from "@mui/icons-material/Logout";
-import EuroSymbolIcon from "@mui/icons-material/EuroSymbol";
-import AttachEmailIcon from "@mui/icons-material/AttachEmail";
-import TuneIcon from "@mui/icons-material/Tune";
-import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
-import { Menu, MenuItem } from "@mui/material";
+import {
+  Drawer,
+  Menu,
+  MenuItem,
+  styled,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useSpring, animated } from "@react-spring/web";
 
-import Image from "next/image";
+import { usePathname } from "next/navigation";
+import {
+  AdjustmentsHorizontalIcon,
+  Bars4Icon,
+  ChevronLeftIcon,
+  CurrencyDollarIcon,
+  InboxIcon,
+  MagnifyingGlassIcon,
+  UsersIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { MaterialDesignContent, SnackbarProvider } from "notistack";
+import AppProvider from "./context";
 
-const drawerWidth = 240;
-
-const openedMixin = (theme: Theme): CSSObject => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  padding: theme.spacing(0, 0),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
+interface NavButtonProps {
+  text: string;
+  icon: React.ReactNode;
+  active: boolean;
+  hideText: boolean;
 }
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+const NavButton: React.FC<NavButtonProps> = function ({
+  icon,
+  text,
+  active,
+  hideText,
+}) {
+  const textAnimationProps = useSpring({
+    opacity: hideText ? 0 : 1,
+    width: hideText ? 0 : 150,
+    paddingX: hideText ? 0 : 4,
+    reverse: hideText,
+  });
 
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
+  return (
+    <ListItemButton
+      className="hover:bg-indigo-600/10 hover:text-indigo-700 duration-300"
+      selected={active}
+      sx={{
+        flexGrow: 0,
+        padding: 1,
+        display: "flex",
+        "&.Mui-selected": {
+          backgroundColor: "rgb(79, 70, 229)",
+          color: "white",
+        },
+      }}
+    >
+      <ListItemIcon
+        sx={{
+          minWidth: 0,
+          width: 25,
+          height: 25,
+          color: "inherit",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {icon}
+      </ListItemIcon>
+      <animated.div
+        className={`${hideText && "w-0 overflow-hidden"} text-sm`}
+        style={textAnimationProps}
+      >
+        {text}
+      </animated.div>
+    </ListItemButton>
+  );
+};
 
 const navItems = [
-  { title: "Loans", icon: <EuroSymbolIcon />, path: "loans" },
-  { title: "Clients", icon: <SwitchAccountIcon />, path: "clients" },
-  { title: "Settings", icon: <TuneIcon />, path: "settings" },
-  { title: "Mail", icon: <AttachEmailIcon />, path: "mail" },
+  { title: "Loans", icon: <CurrencyDollarIcon height={20} />, path: "loans" },
+  {
+    title: "Clients",
+    icon: <UsersIcon height={20} />,
+    path: "clients",
+  },
+  {
+    title: "Settings",
+    icon: <AdjustmentsHorizontalIcon height={20} />,
+    path: "settings",
+  },
+  { title: "Mail", icon: <InboxIcon height={20} />, path: "mail" },
 ];
 
 const accountActions = [
@@ -148,161 +131,238 @@ const accountActions = [
   },
 ];
 
+const StyledMaterialDesignContent = styled(MaterialDesignContent)(() => ({
+  "&.notistack-MuiContent-success": {
+    backgroundColor: "white",
+    color: "rgba(99, 70, 241)",
+  },
+  "&.notistack-MuiContent-error": {
+    backgroundColor: "white",
+    color: "#b23c17",
+  },
+  "&.notistack-MuiContent-warning": {
+    backgroundColor: "white",
+    color: "#ffc107",
+  },
+  "&.notistack-MuiContent-info": {
+    backgroundColor: "white",
+    color: "#00e5ff",
+  },
+}));
+
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const [hide, setHide] = React.useState(true);
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const isMdOrLarger = useMediaQuery(theme.breakpoints.up("md"));
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+  const toggleDrawer = (newOpen: boolean) => setHide(newOpen);
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  const pathName = usePathname();
 
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar className="bg-green-800" position="fixed" open={open}>
-        <Toolbar className="flex">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography className="w-full" variant="h6" noWrap component="div">
-            Entry Ventures
-          </Typography>
-          <Box className="" sx={{ flexGrow: 0 }}>
-            <Tooltip title="Account">
-              <IconButton onClick={() => {}} sx={{ p: 0 }}>
-                <Avatar alt="Wemy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              // anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={false}
-              // open={Boolean(anchorElUser)}
-              // onClose={handleCloseUserMenu}
-            >
-              {accountActions.map((action, index) => (
-                <MenuItem
-                  className="pr-[5em] group hover:text-green-800"
-                  title={action.title}
-                  key={index}
-                >
-                  <IconButton className="group-hover:text-green-800">
-                    {action.icon}
-                  </IconButton>
-                  <Typography textAlign="center">{action.title}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader className="">
-          <Image alt="" src="/logo.png" width={(500 / 183) * 60} height={60} />
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
+    <SnackbarProvider
+      Components={{
+        success: StyledMaterialDesignContent,
+        info: StyledMaterialDesignContent,
+        error: StyledMaterialDesignContent,
+        warning: StyledMaterialDesignContent,
+      }}
+    >
+      <AppProvider>
+        <Box
+          sx={{
+            position: "fixed",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* ============ Top App Bar ============= */}
+          <TopAppBar toggleDrawer={toggleDrawer} expandSideNav={hide} />
 
-        <List>
-          {navItems.map((navItem, index) => (
-            <Link href={navItem.path} key={index}>
-              <ListItem
-                className="group cursor-pointer hover:bg-green-800 hover:text-white duration-300"
-                title={navItem.title}
-                disablePadding
-                sx={{ display: "block" }}
-              >
-                <ListItemButton
-                  className=""
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
-                >
-                  <ListItemIcon
-                    className="text-green-800 group-hover:text-white"
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {navItem.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={navItem.title}
-                    sx={{ opacity: open ? 1 : 0 }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-
-        <div className="flex-grow"></div>
-
-        <List>
-          <ListItem
-            className="group hover:bg-green-800 hover:text-white duration-300"
-            title={"Logout"}
-            disablePadding
-            sx={{ display: "block" }}
-          >
-            <ListItemButton
+          <Box className="" sx={{ display: "flex", flexGrow: 1 }}>
+            {/* ============ Large Screen ============ */}
+            <Box
               sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
+                display: isMdOrLarger ? "flex" : "none",
+                flexDirection: "column",
+                p: 1,
+                gap: 1,
+                borderRight: "solid 1px rgb(229, 231, 235)",
               }}
             >
-              <ListItemIcon
-                className="text-green-800 group-hover:text-white"
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}
+              {navItems.map((navItem, index) => (
+                <Link
+                  key={index}
+                  className="border-gray-200"
+                  href={`/dashboard/${navItem.path}`}
+                >
+                  <NavButton
+                    text={navItem.title}
+                    icon={navItem.icon}
+                    active={pathName.startsWith(`/dashboard/${navItem.path}`)}
+                    hideText={hide}
+                  />
+                </Link>
+              ))}
+              <div className="flex-grow"></div>
+              <NavButton
+                hideText={hide}
+                text={"Logout"}
+                icon={<LogoutIcon sx={{ height: "20px" }} />}
+                active={true}
+              />
+            </Box>
+
+            {/* ============ Small Screen ============ */}
+            <Drawer
+              sx={{
+                position: "relative",
+                display: isMdOrLarger ? "none" : "block",
+              }}
+              onClose={() => toggleDrawer(false)}
+              open={hide}
+            >
+              <div className="flex justify-betweeen items-center pr-4">
+                <Typography
+                  className="p-4 font-extrabold text-indigo-600"
+                  variant="h4"
+                  component="div"
+                >
+                  E-Ventures
+                </Typography>
+                <IconButton onClick={() => toggleDrawer(false)}>
+                  <XMarkIcon className="text-indigo-600" height={20} />
+                </IconButton>
+              </div>
+
+              <div className="flex-grow flex flex-col p-2 gap-2">
+                {navItems.map((navItem, index) => (
+                  <Link
+                    key={index}
+                    style={{ width: "100%" }}
+                    href={`/dashboard/${navItem.path}`}
+                  >
+                    <NavButton
+                      icon={navItem.icon}
+                      text={navItem.title}
+                      active={pathName.startsWith(`/dashboard/${navItem.path}`)}
+                      hideText={false}
+                    />
+                  </Link>
+                ))}
+                <div className="flex-grow"></div>
+
+                <NavButton
+                  hideText={false}
+                  text={"Logout"}
+                  icon={<LogoutIcon sx={{ height: "20px" }} />}
+                  active={true}
+                />
+              </div>
+            </Drawer>
+            <Box component="main" sx={{ flexGrow: 1, display: "flex", border: "solid", overflowY: "scroll" }}>
+              <div className="p-2 overflow-y-scroll flex-grow">{children}</div>
+            </Box>
+          </Box>
+        </Box>
+      </AppProvider>
+    </SnackbarProvider>
+  );
+}
+
+function TopAppBar({
+  toggleDrawer,
+  expandSideNav,
+}: {
+  expandSideNav: boolean;
+  toggleDrawer: (flag: boolean) => void;
+}) {
+  return (
+    <div className="border-b">
+      <Toolbar
+        sx={{
+          display: "flex",
+        }}
+      >
+        <IconButton
+          aria-label="open drawer"
+          onClick={() => toggleDrawer(!expandSideNav)}
+          edge="start"
+          sx={{
+            color: "rgb(79, 70, 229)",
+          }}
+        >
+          {expandSideNav ? (
+            <Bars4Icon height={25} />
+          ) : (
+            <ChevronLeftIcon height={25} />
+          )}
+        </IconButton>
+        <Typography
+          className="p-4"
+          variant="h5"
+          component="div"
+          sx={{ fontWeight: "bolder", color: "rgb(79 70 229)" }}
+        >
+          E-Ventures
+        </Typography>
+        <div className="flex flex-grow justify-center">
+          <div
+            className={`-md:hidden relative flex flex-1 flex-shrink-0 max-w-lg`}
+          >
+            <label htmlFor="search" className="sr-only">
+              Search
+            </label>
+            <input
+              className="peer block w-full border border-gray-200 py-[9px] pl-10 text-sm outline-2 outline-indigo-700 placeholder:text-gray-500"
+              placeholder="Search..."
+            />
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            <button className="absolute right-1 bottom-1 top-1 bg-indigo-600 px-4 text-[#fff] font-bold hover:bg-indigo-600/10 hover:text-indigo-700 duration-300">
+              Go
+            </button>
+          </div>
+        </div>
+        <Box sx={{}}>
+          <Tooltip title="Account">
+            <IconButton onClick={() => {}} sx={{ p: 0 }}>
+              <Avatar
+                className="border-2 border-indigo-600 text-indigo-600"
+                alt="Wemy Sharp"
+                src="/static/images/avatar/2.jpg"
+              />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={false}
+          >
+            {accountActions.map((action, index) => (
+              <MenuItem
+                className="pr-[5em] group hover:text-indigo-600"
+                title={action.title}
+                key={index}
               >
-                <LogoutIcon />
-              </ListItemIcon>
-              <ListItemText primary="Logout" sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1 }}>
-        <DrawerHeader />
-        {children}
-      </Box>
-    </Box>
+                <IconButton className="group-hover:text-teal-600">
+                  {action.icon}
+                </IconButton>
+                <Typography textAlign="center">{action.title}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
+      </Toolbar>
+    </div>
   );
 }

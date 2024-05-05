@@ -21,12 +21,12 @@ export default function PageResizer({}) {
   return (
     <div className="flex gap-4 items-center">
       <input
-        defaultValue={searchParams.get("size")?.toString()}
+        defaultValue={searchParams.get("size")?.toString() || 10}
         onChange={(e) => {
           handlePageSize(parseInt(e.target.value) || 10);
         }}
         type="number"
-        className="text-center w-14 h-8 ring-2 ring-gray-300 outline-lime-700 rounded"
+        className="text-center w-14 h-8 ring-2 ring-gray-300 outline-indigo-700"
       />
       <label htmlFor="search" className="">
         Per Page

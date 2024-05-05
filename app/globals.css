@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar {
+  height: 0;
+}
+
+.hide-horizontal-scroll-bar::-webkit-scrollbar {
+  background-color: "red";
+}
+
 .modal-content {
   background-color: "rgba(255, 255, 255, .8)";
   border: "none";
@@ -9,7 +17,8 @@
 
 .line-shadow {
   transition: 0.5s;
-  box-shadow: 0.04em .04em 0.3em rgba(63, 98, 18, 0.5), -0.04em 0.04em 0.3em rgba(63, 98, 18, 0.5);
+  box-shadow: 0.04em 0.04em 0.3em rgba(63, 98, 18, 0.5),
+    -0.04em 0.04em 0.3em rgba(63, 98, 18, 0.5);
 }
 .line-shadow-on-hover {
   transition: 0.5s;
@@ -17,7 +26,36 @@
 
 .line-shadow-on-hover:hover,
 .on-focus-shadow:focus {
-  box-shadow: 0.04em .04em 0.3em rgba(63, 98, 18, 0.5), -0.04em 0.04em 0.3em rgba(63, 98, 18, 0.5);
+  box-shadow: 0.04em 0.04em 0.3em rgba(63, 98, 18, 0.5),
+    -0.04em 0.04em 0.3em rgba(63, 98, 18, 0.5);
+}
+
+.anim-show {
+  display: block;
+  animation: 0.5s anim_show ease-in;
+}
+.anim-hide {
+  display: none;
+  animation: 0.5s anim_hide ease-in;
+}
+
+@keyframes anim_show {
+  from {
+    width: 0;
+    /* font-size: 0; */
+  }
+  to {
+    display: block;
+  }
+}
+
+@keyframes anim_hide {
+  from {
+  }
+  to {
+    font-size: 0;
+    display: none;
+  }
 }
 
 /* :root {
