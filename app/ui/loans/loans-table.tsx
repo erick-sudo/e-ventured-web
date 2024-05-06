@@ -15,6 +15,7 @@ import Link from "next/link";
 import { ArrowUpIcon } from "@heroicons/react/16/solid";
 import LoanApprovalModal from "./approval-modal";
 import { LoanOut } from "@/app/lib/definitions";
+import { IconButton } from "@mui/material";
 
 const headers = [
   { key: "Client", sortable: true },
@@ -46,10 +47,12 @@ export async function LoansTable({
       <div className="flex gap-2">
         <Search placeholder="Search loans..." />
         <Link href="/dashboard/loans/new">
-          <EButton className="py-2 px-4"><span>Open Loan</span></EButton>
+          <EButton className="py-2 px-4">
+            <span>Open Loan</span>
+          </EButton>
         </Link>
       </div>
-      <div className="overflow-x-scroll hide-horizontal-scroll-bar">
+      <div className="horizontal-scrollbar pb-4">
         <table className="w-full">
           <thead>
             <tr className="text-gray-700">
@@ -128,30 +131,12 @@ export async function LoansTable({
                     <LoanStatus status={loan.status} />
                   </td>
                   <td className="group">
-                    <div className="flex justify-center px-2">
-                      <ArrowDownIcon
-                        className="hidden group-hover:block text-indigo-700"
-                        height={12}
-                      />
-                      <ArrowRightIcon
-                        className="group-hover:hidden"
-                        height={12}
-                      />
-                    </div>
-                    <div className="relative">
-                      <div className="hidden group-hover:block absolute z-40 bg-white rounded-md p-3 right-2 ring-2 ring-indigo-700/50 cursor-pointer">
-                        <div className="flex items-center gap-2 hover:text-indigo-600 duration-300 border-b px-4 py-1">
-                          <MagnifyingGlassCircleIcon height={12} />{" "}
-                          <span className="whitespace-nowrap">
-                            View Details
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 hover:text-indigo-600 duration-300 border-b px-4 py-2">
-                          <PencilIcon height={12} />{" "}
-                          <span className="whitespace-nowrap">Edit loan</span>
-                        </div>
-                        <LoanApprovalModal />
-                      </div>
+                    <div className="flex justify-center items-center">
+                      <Link href={`/dashboard/loans/${loan.id}/edit`}>
+                        <IconButton title="View Details">
+                          <PencilIcon height={20} />
+                        </IconButton>
+                      </Link>
                     </div>
                   </td>
                 </tr>

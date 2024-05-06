@@ -16,6 +16,15 @@ export const apis = {
     deleteLoan: `${baseUrl}/loans/<:loanId>`,
     approveLoan: `${baseUrl}/loans/<:loanId>`,
   },
+  clients: {
+    elasticSearch: `${baseUrl}/clients/elastic/search`,
+  },
+  loanOfficers: {
+    elasticSearch: `${baseUrl}/loan-officers/elastic/search`,
+  },
+  vaults: {
+    elasticSearch: `${baseUrl}/vaults/elastic/search`,
+  },
 };
 
 export async function getRequest({

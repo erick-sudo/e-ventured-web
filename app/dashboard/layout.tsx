@@ -19,6 +19,10 @@ import {
 import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useSpring, animated } from "@react-spring/web";
 
 import { usePathname } from "next/navigation";
@@ -27,6 +31,7 @@ import {
   Bars4Icon,
   ChevronLeftIcon,
   CurrencyDollarIcon,
+  HomeIcon,
   InboxIcon,
   MagnifyingGlassIcon,
   UsersIcon,
@@ -35,6 +40,7 @@ import {
 import Link from "next/link";
 import { MaterialDesignContent, SnackbarProvider } from "notistack";
 import AppProvider from "./context";
+import { capitalize } from "../lib/utils";
 
 interface NavButtonProps {
   text: string;
@@ -94,6 +100,7 @@ const NavButton: React.FC<NavButtonProps> = function ({
 };
 
 const navItems = [
+  { title: "Home", icon: <HomeIcon height={20} />, path: "" },
   { title: "Loans", icon: <CurrencyDollarIcon height={20} />, path: "loans" },
   {
     title: "Clients",
@@ -155,119 +162,155 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const theme = useTheme();
   const isMdOrLarger = useMediaQuery(theme.breakpoints.up("md"));
 
-  const toggleDrawer = (newOpen: boolean) => setHide(newOpen);
-
   const pathName = usePathname();
 
+  const segments = pathName.split("/").slice(1);
+
+  const breadcrumbs = segments.map((segment, idx) =>
+    idx === segments.length - 1 ? (
+      <Typography component="div" className="text-indigo-700" key={idx}>
+        {capitalize(segment)}
+      </Typography>
+    ) : (
+      <Link
+        className="hover:underline"
+        color="inherit"
+        href={`/${segments.slice(0, idx + 1).join("/")}`}
+        key={idx}
+      >
+        {capitalize(segment)}
+      </Link>
+    )
+  );
+
+  console.log();
+
   return (
-    <SnackbarProvider
-      Components={{
-        success: StyledMaterialDesignContent,
-        info: StyledMaterialDesignContent,
-        error: StyledMaterialDesignContent,
-        warning: StyledMaterialDesignContent,
-      }}
-    >
-      <AppProvider>
-        <Box
-          sx={{
-            position: "fixed",
-            inset: 0,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {/* ============ Top App Bar ============= */}
-          <TopAppBar toggleDrawer={toggleDrawer} expandSideNav={hide} />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <SnackbarProvider
+        Components={{
+          success: StyledMaterialDesignContent,
+          info: StyledMaterialDesignContent,
+          error: StyledMaterialDesignContent,
+          warning: StyledMaterialDesignContent,
+        }}
+      >
+        <AppProvider>
+          <Box
+            sx={{
+              position: "fixed",
+              inset: 0,
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {/* ============ Top App Bar ============= */}
+            <TopAppBar toggleDrawer={setHide} expandSideNav={hide} />
 
-          <Box className="" sx={{ display: "flex", flexGrow: 1 }}>
-            {/* ============ Large Screen ============ */}
-            <Box
-              sx={{
-                display: isMdOrLarger ? "flex" : "none",
-                flexDirection: "column",
-                p: 1,
-                gap: 1,
-                borderRight: "solid 1px rgb(229, 231, 235)",
-              }}
-            >
-              {navItems.map((navItem, index) => (
-                <Link
-                  key={index}
-                  className="border-gray-200"
-                  href={`/dashboard/${navItem.path}`}
-                >
-                  <NavButton
-                    text={navItem.title}
-                    icon={navItem.icon}
-                    active={pathName.startsWith(`/dashboard/${navItem.path}`)}
-                    hideText={hide}
-                  />
-                </Link>
-              ))}
-              <div className="flex-grow"></div>
-              <NavButton
-                hideText={hide}
-                text={"Logout"}
-                icon={<LogoutIcon sx={{ height: "20px" }} />}
-                active={true}
-              />
-            </Box>
-
-            {/* ============ Small Screen ============ */}
-            <Drawer
-              sx={{
-                position: "relative",
-                display: isMdOrLarger ? "none" : "block",
-              }}
-              onClose={() => toggleDrawer(false)}
-              open={hide}
-            >
-              <div className="flex justify-betweeen items-center pr-4">
-                <Typography
-                  className="p-4 font-extrabold text-indigo-600"
-                  variant="h4"
-                  component="div"
-                >
-                  E-Ventures
-                </Typography>
-                <IconButton onClick={() => toggleDrawer(false)}>
-                  <XMarkIcon className="text-indigo-600" height={20} />
-                </IconButton>
-              </div>
-
-              <div className="flex-grow flex flex-col p-2 gap-2">
+            <Box className="" sx={{ display: "flex", flexGrow: 1 }}>
+              {/* ============ Large Screen ============ */}
+              <Box
+                sx={{
+                  display: isMdOrLarger ? "flex" : "none",
+                  flexDirection: "column",
+                  p: 1,
+                  gap: 1,
+                  borderRight: "solid 1px rgb(229, 231, 235)",
+                }}
+              >
                 {navItems.map((navItem, index) => (
                   <Link
                     key={index}
-                    style={{ width: "100%" }}
+                    className="border-gray-200"
                     href={`/dashboard/${navItem.path}`}
                   >
                     <NavButton
-                      icon={navItem.icon}
                       text={navItem.title}
-                      active={pathName.startsWith(`/dashboard/${navItem.path}`)}
-                      hideText={false}
+                      icon={navItem.icon}
+                      active={
+                        pathName ===
+                        `/dashboard${navItem.path ? "/" + navItem.path : ""}`
+                      }
+                      hideText={hide}
                     />
                   </Link>
                 ))}
                 <div className="flex-grow"></div>
-
                 <NavButton
-                  hideText={false}
+                  hideText={hide}
                   text={"Logout"}
                   icon={<LogoutIcon sx={{ height: "20px" }} />}
                   active={true}
                 />
+              </Box>
+
+              {/* ============ Small Screen ============ */}
+              <Drawer
+                sx={{
+                  position: "relative",
+                  display: isMdOrLarger ? "none" : "block",
+                }}
+                onClose={() => setHide(true)}
+                open={!hide}
+              >
+                <div className="flex justify-betweeen items-center pr-4">
+                  <Typography
+                    className="p-4 font-extrabold text-indigo-600"
+                    variant="h4"
+                    component="div"
+                  >
+                    E-Ventures
+                  </Typography>
+                  <IconButton onClick={() => setHide(true)}>
+                    <XMarkIcon className="text-indigo-600" height={20} />
+                  </IconButton>
+                </div>
+
+                <div className="flex-grow flex flex-col p-2 gap-2">
+                  {navItems.map((navItem, index) => (
+                    <Link
+                      key={index}
+                      style={{ width: "100%" }}
+                      href={`/dashboard/${navItem.path}`}
+                    >
+                      <NavButton
+                        icon={navItem.icon}
+                        text={navItem.title}
+                        active={pathName.startsWith(
+                          `/dashboard/${navItem.path}`
+                        )}
+                        hideText={false}
+                      />
+                    </Link>
+                  ))}
+                  <div className="flex-grow"></div>
+
+                  <NavButton
+                    hideText={false}
+                    text={"Logout"}
+                    icon={<LogoutIcon sx={{ height: "20px" }} />}
+                    active={true}
+                  />
+                </div>
+              </Drawer>
+              <div className="flex-grow relative bg-gray-100">
+                <div className="vertical-scrollbar absolute inset-y-0 left-0 right-1 flex flex-col">
+                  <div className="px-4 pt-4">
+                    <Breadcrumbs
+                      separator={<NavigateNextIcon fontSize="small" />}
+                      aria-label="breadcrumb"
+                    >
+                      {breadcrumbs}
+                    </Breadcrumbs>
+                  </div>
+                  {children}
+                </div>
               </div>
-            </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, display: "flex", border: "solid", overflowY: "scroll" }}>
-              <div className="p-2 overflow-y-scroll flex-grow">{children}</div>
             </Box>
           </Box>
-        </Box>
-      </AppProvider>
-    </SnackbarProvider>
+        </AppProvider>
+      </SnackbarProvider>
+    </LocalizationProvider>
   );
 }
 

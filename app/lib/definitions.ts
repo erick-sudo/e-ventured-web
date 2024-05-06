@@ -30,6 +30,15 @@ export type LoanOut = {
   vault: VaultDto;
 };
 
+export type LoanInfo = {
+
+}
+
+export type FullLoanOut = {
+  loan: LoanOut,
+  info: LoanInfo
+}
+
 export type ClientDto = {
   id: string;
   name: string;
