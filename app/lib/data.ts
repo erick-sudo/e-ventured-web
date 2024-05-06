@@ -1,5 +1,5 @@
 import { apis } from "./apis";
-import { ClientDto, EndpointCount, FullLoanOut, LoanOut } from "./definitions";
+import { ClientDto, EndpointCount, LoanMiniStatement, LoanOut } from "./definitions";
 import axios from "axios";
 
 const get = axios.get;
@@ -35,9 +35,9 @@ export async function fetchLoans(
 
 export async function fetchLoanById(
   loanId: string
-): Promise<FullLoanOut | null> {
+): Promise<LoanMiniStatement | null> {
   return await axios
-    .get(apis.loans.getLoanById.replace("<:loanId>", loanId))
+    .get(apis.loans.getLoanInfo.replace("<:loanId>", loanId))
     .then((response) => response.data)
     .catch((axiosError) => {
       if (axiosError?.response?.status === 404) {

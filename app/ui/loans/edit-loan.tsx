@@ -1,7 +1,10 @@
-import { FullLoanOut } from '@/app/lib/definitions'
+"use client"
+
+import { LoanMiniStatement } from '@/app/lib/definitions'
 import React from 'react'
 
-const EditLoanForm: React.FC<FullLoanOut> = ({ loan, info }) => {
+const EditLoanForm: React.FC<LoanMiniStatement> = ({ loan, info }) => {
+
   return (
     <div>EditLoanForm</div>
   )

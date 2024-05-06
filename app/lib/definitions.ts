@@ -31,13 +31,24 @@ export type LoanOut = {
 };
 
 export type LoanInfo = {
+  loan_period: string;
+  installment_pattern: string;
+  expected_amount_to_date: number;
+  calculated_amount_to_date: number;
+  elapsed_periods: number;
+  current_period: number;
+  elapsed_days: number;
+  collected_amount: number;
+  defaulted: boolean;
+  fine: number;
+  balance: number;
+  total: number;
+};
 
-}
-
-export type FullLoanOut = {
-  loan: LoanOut,
-  info: LoanInfo
-}
+export type LoanMiniStatement = {
+  loan: LoanOut;
+  info: LoanInfo;
+};
 
 export type ClientDto = {
   id: string;
@@ -107,7 +118,7 @@ export interface RangeableInputField extends FormInputField {
 }
 
 export interface FormSelectionField extends FormField {
-  options: {label?: string, value: string | number | readonly string[]}[];
+  options: { label?: string; value: string | number | readonly string[] }[];
 }
 
 export interface TextAreaField extends FormField {
