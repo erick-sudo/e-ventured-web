@@ -352,7 +352,7 @@ function TopAppBar({
         </Typography>
         <div className="flex flex-grow justify-center">
           <div
-            className={`-md:hidden relative flex flex-1 flex-shrink-0 max-w-lg`}
+            className={`-md:hidden relative flex flex-1 flex-shrink-0 mx-12 max-w-lg`}
           >
             <label htmlFor="search" className="sr-only">
               Search

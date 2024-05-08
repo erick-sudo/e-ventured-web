@@ -33,7 +33,7 @@ export async function fetchLoans(
     });
 }
 
-export async function fetchLoanById(
+export async function fetchLoanMiniStatement(
   loanId: string
 ): Promise<LoanMiniStatement | null> {
   return await axios

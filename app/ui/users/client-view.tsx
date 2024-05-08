@@ -1,4 +1,4 @@
-import { LoanOfficerDto } from "@/app/lib/definitions";
+import { ClientDto } from "@/app/lib/definitions";
 import {
   EnvelopeIcon,
   EnvelopeOpenIcon,
@@ -7,26 +7,26 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 
-export const LoanOfficerView = ({
-  loanOfficer,
+export const ClientView = ({
+  client,
   className,
 }: {
+  client: ClientDto;
   className?: string;
-  loanOfficer: LoanOfficerDto;
 }) => {
   return (
     <div className={`${className}`}>
       <div className="flex items-center gap-3 px-2">
         <UserIcon height={20} className="text-gray-500" />
-        <span className="text-gray-70">{loanOfficer.name}</span>
+        <span className="text-gray-70">{client.name}</span>
       </div>
       <div className="flex items-center gap-3 px-2">
         <EnvelopeOpenIcon height={20} className="text-gray-500" />
-        <span className="text-gray-70">{loanOfficer.email}</span>
+        <span className="text-gray-70">{client.email}</span>
       </div>
       <div className="flex items-center gap-3 px-2">
         <PhoneArrowDownLeftIcon height={20} className="text-gray-500" />
-        <span className="text-gray-70">{loanOfficer.phone}</span>
+        <span className="text-gray-70">{client.phone}</span>
       </div>
     </div>
   );

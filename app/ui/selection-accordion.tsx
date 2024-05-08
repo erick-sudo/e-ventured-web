@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface SelectionAccordionProps<T> {
+  disabled?: boolean;
   required?: boolean;
   placeholder?: string;
   onChange: (option: T) => void;
@@ -31,6 +32,8 @@ export function SelectionAccordion<T>(
 
   return (
     <Accordion
+      disabled={props.disabled}
+      square
       className={`${props.className}`}
       expanded={expanded}
       onChange={() => setExpanded(!expanded)}

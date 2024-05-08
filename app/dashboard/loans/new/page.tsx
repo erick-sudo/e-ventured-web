@@ -5,44 +5,21 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  TextField,
   Typography,
 } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { AppContext } from "../../context";
-import {
-  ClientDto,
-  LoanDto,
-  LoanOfficerDto,
-  LoanOut,
-  VaultDto,
-} from "@/app/lib/definitions";
+import { ClientDto, LoanOfficerDto, VaultDto } from "@/app/lib/definitions";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { snakeCaseToTitleCase, todaysDate } from "@/app/lib/utils";
+import { todaysDate } from "@/app/lib/utils";
 import { SelectionAccordion } from "@/app/ui/selection-accordion";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { LazySearch } from "@/app/ui/lazy-search";
 import { apis } from "@/app/lib/apis";
 import dayjs from "dayjs";
-import {
-  EnvelopeOpenIcon,
-  PhoneArrowDownLeftIcon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
-
-const initialFormData: LoanDto = {
-  id: "",
-  status: "Pending",
-  amount: 0,
-  repayment_interval: "DAYS",
-  repayment_duration: 1,
-  first_repayment_date: new Date().toDateString().toString(),
-  interest_rate: 0.1,
-  type_of_interest: "SIMPLE",
-  client_id: "",
-  loan_officer_id: "",
-  vault_id: "",
-};
+import { ClientView } from "@/app/ui/users/client-view";
+import { LoanOfficerView } from "@/app/ui/users/loan-officer-view";
+import { VaultView } from "@/app/ui/vault/vault-view";
+import EVInput from "@/app/ui/ev-Input";
 
 interface FlatLoanProps {
   amount: number;
@@ -73,21 +50,19 @@ function Page() {
       <form className="grid gap-4 p-4 max-w-3xl lg:max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
-            <div className="group grid">
-              <label>Amount</label>
-              <input
-                className="border-[1px] border-gray-400 outline-1 outline-indigo-700 px-4 py-2 "
-                name="amount"
-                type="number"
-                value={flatLoanProps.amount}
-                onChange={(e) => {
-                  setFlatLoanProps({
-                    ...flatLoanProps,
-                    amount: parseFloat(e.target.value),
-                  });
-                }}
-              />
-            </div>
+            <EVInput
+              label="Amount"
+              className="grid"
+              name="amount"
+              type="number"
+              value={flatLoanProps.amount}
+              onChange={(v: string) => {
+                setFlatLoanProps({
+                  ...flatLoanProps,
+                  amount: parseFloat(v),
+                });
+              }}
+            />
 
             <div className="group grid">
               <label>Repayment Interval</label>
@@ -105,41 +80,47 @@ function Page() {
               />
             </div>
 
-            <div className="group grid">
-              <label>Repayment Duration</label>
-              <input
-                className="border-[1px] border-gray-400 outline-1 outline-indigo-700 px-4 py-2 "
-                name="repayment_duration"
-                type="number"
-                value={flatLoanProps.repayment_duration}
-                onChange={(e) => {
-                  setFlatLoanProps({
-                    ...flatLoanProps,
-                    repayment_duration: parseFloat(e.target.value),
-                  });
-                }}
-              />
-            </div>
+            <EVInput
+              label="Repayment Duration"
+              className="grid"
+              name="repayment_duration"
+              type="number"
+              value={flatLoanProps.repayment_duration}
+              onChange={(v: string) => {
+                setFlatLoanProps({
+                  ...flatLoanProps,
+                  repayment_duration: parseFloat(v),
+                });
+              }}
+            />
 
-            <div className="group grid">
-              <label>Interest Rate</label>
-              <input
-                className="border-[1px] border-gray-400 outline-1 outline-indigo-700 px-4 py-2 "
-                name="interest_rate"
-                type="number"
-                value={flatLoanProps.interest_rate}
-                onChange={(e) => {
-                  setFlatLoanProps({
-                    ...flatLoanProps,
-                    interest_rate: parseFloat(e.target.value),
-                  });
-                }}
-              />
-            </div>
+            <EVInput
+              label="Interest Rate"
+              className="grid"
+              name="interest_rate"
+              type="number"
+              value={flatLoanProps.interest_rate}
+              onChange={(v: string) => {
+                setFlatLoanProps({
+                  ...flatLoanProps,
+                  interest_rate: parseFloat(v),
+                });
+              }}
+            />
 
             <div className="group grid">
               <label>First Repayment Date</label>
               <DatePicker
+                sx={{
+                  width: "100%",
+                  backgroundColor: "white",
+                  "& .MuiOutlinedInput-root": {
+                    "&:hover > fieldset": { borderColor: "#4f46e5" },
+                    "&.Mui-focused fieldset": { borderColor: "#4f46e5" },
+                    height: "48px",
+                    borderRadius: "0px",
+                  },
+                }}
                 onChange={(newDate) =>
                   setFlatLoanProps({
                     ...flatLoanProps,
@@ -168,7 +149,7 @@ function Page() {
             </div>
           </div>
           <div className="">
-            <Accordion expanded={true}>
+            <Accordion square expanded={true}>
               <AccordionSummary>
                 <div className="grid w-full">
                   <label>Client</label>
@@ -182,39 +163,20 @@ function Page() {
                     }}
                     className="shadow shadow-indigo-700 bg-gray-100"
                     childHoverClassName="group bg-white hover:bg-indigo-700/20 hover:text-indigo-700 duration-300 border-indigo-600"
-                    matchClassName="text-indigo-70 group-hover:text-black font-bolder underline duration-300"
+                    matchClassName="text-indigo-700 group-hover:text-black font-bolder underline duration-300"
                   />
                 </div>
               </AccordionSummary>
               {client && (
                 <AccordionDetails>
-                  <div className="py-2 border-l-8 shadow bg-white border-indigo-600">
-                    <div className="flex items-center gap-2 px-4">
-                      <UserIcon height={20} className="text-gray-500" />
-                      <span className="text-gray-70 font-bold">
-                        {client.name}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 px-4">
-                      <EnvelopeOpenIcon height={20} className="text-gray-500" />
-                      <span className="text-gray-70 font-bold">
-                        {client.email}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 px-4">
-                      <PhoneArrowDownLeftIcon
-                        height={20}
-                        className="text-gray-500"
-                      />
-                      <span className="text-gray-70 font-bold">
-                        {client.phone}
-                      </span>
-                    </div>
-                  </div>
+                  <ClientView
+                    client={client}
+                    className="py-2 border-l-8 shadow bg-white border-indigo-600"
+                  />
                 </AccordionDetails>
               )}
             </Accordion>
-            <Accordion expanded={true}>
+            <Accordion square expanded={true}>
               <AccordionSummary>
                 <div className="grid w-full">
                   <label>Loan Officer</label>
@@ -234,33 +196,14 @@ function Page() {
               </AccordionSummary>
               {loanOfficer && (
                 <AccordionDetails>
-                  <div className="py-2 border-l-8 shadow bg-white border-indigo-600">
-                    <div className="flex items-center gap-2 px-4">
-                      <UserIcon height={20} className="text-gray-500" />
-                      <span className="text-gray-70 font-bold">
-                        {loanOfficer.name}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 px-4">
-                      <EnvelopeOpenIcon height={20} className="text-gray-500" />
-                      <span className="text-gray-70 font-bold">
-                        {loanOfficer.email}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 px-4">
-                      <PhoneArrowDownLeftIcon
-                        height={20}
-                        className="text-gray-500"
-                      />
-                      <span className="text-gray-70 font-bold">
-                        {loanOfficer.phone}
-                      </span>
-                    </div>
-                  </div>
+                  <LoanOfficerView
+                    loanOfficer={loanOfficer}
+                    className="py-2 border-l-8 shadow bg-white border-indigo-600"
+                  />
                 </AccordionDetails>
               )}
             </Accordion>
-            <Accordion expanded={true}>
+            <Accordion square expanded={true}>
               <AccordionSummary>
                 <div className="grid w-full">
                   <label>Search Vaults</label>
@@ -280,14 +223,10 @@ function Page() {
               </AccordionSummary>
               {vault && (
                 <AccordionDetails>
-                  <div className="py-2 border-l-8 shadow bg-white border-indigo-600">
-                    <div className="flex items-center gap-2 px-4">
-                      <AccountBalanceIcon className="text-gray-500" />
-                      <span className="text-gray-70 font-bold">
-                        {vault.name}
-                      </span>
-                    </div>
-                  </div>
+                  <VaultView
+                    vault={vault}
+                    className="py-2 border-l-8 shadow bg-white border-indigo-600"
+                  />
                 </AccordionDetails>
               )}
             </Accordion>
