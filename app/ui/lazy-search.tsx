@@ -3,7 +3,6 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { joinArrays } from "../lib/utils";
 import axios from "axios";
 import { LinearProgress } from "@mui/material";
-import zIndex from "@mui/material/styles/zIndex";
 
 interface LazySearchProps<T> {
   zIndex: number;

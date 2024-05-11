@@ -11,8 +11,15 @@ import { SelectionAccordion } from "../selection-accordion";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { EButton } from "./buttons";
-import { PencilIcon, PrinterIcon } from "@heroicons/react/24/outline";
+import {
+  CheckBadgeIcon,
+  PencilIcon,
+  PrinterIcon,
+} from "@heroicons/react/24/outline";
 import { formatCurrency } from "@/app/lib/utils";
+import { LoanStatus } from "./loan-status";
+import { LoanCollectionsSkeleton } from "../skeletons";
+import LoanCollections from "./loan-collections";
 
 const EditLoanForm: React.FC<LoanMiniStatement> = ({ loan, info }) => {
   const [editing, setEditing] = useState(false);
@@ -20,6 +27,16 @@ const EditLoanForm: React.FC<LoanMiniStatement> = ({ loan, info }) => {
   return (
     <div className="p-4">
       <Typography variant="h5">Loan Details</Typography>
+      <div className="flex items-center justify-end gap-4">
+        <LoanStatus status={loan.status} />
+        <EButton
+          onClick={() => {}}
+          className="px-4 py-2 flex items-center gap-2 disabled:bg-gray-500 disabled:opacity-50 disabled:hover:text-white disabled:cursor-not-allowed"
+        >
+          <CheckBadgeIcon height={20} />
+          <span>Approve</span>
+        </EButton>
+      </div>
       <div className="grid gap-3 py-4">
         <div className=" px-4 py-2 bg-white shadow duration-300 cursor-pointer">
           <div className="">Loanee</div>
@@ -194,6 +211,12 @@ const EditLoanForm: React.FC<LoanMiniStatement> = ({ loan, info }) => {
               <p>{formatCurrency(info.total)}</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="py-4">
+        <div className="">
+          <LoanCollections loanId={loan.id} />
         </div>
       </div>
     </div>

@@ -69,6 +69,14 @@ export type VaultDto = {
   name: string;
 };
 
+export type LoanCollectionOut = {
+  id: string;
+  loan_id: string;
+  collection_date: string;
+  amount: number;
+  payment_method: string;
+};
+
 export interface ValidationErrorsContainer<T> {
   violations: T;
 }

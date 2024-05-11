@@ -19,6 +19,13 @@ const config: Config = {
         },
       },
     },
+    keyframes: {
+      shimmer: {
+        "100%": {
+          transform: "translateX(100%)",
+        },
+      },
+    },
   },
   plugins: [],
 };

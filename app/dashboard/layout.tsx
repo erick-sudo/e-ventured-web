@@ -100,7 +100,6 @@ const NavButton: React.FC<NavButtonProps> = function ({
 };
 
 const navItems = [
-  { title: "Home", icon: <HomeIcon height={20} />, path: "" },
   { title: "Loans", icon: <CurrencyDollarIcon height={20} />, path: "loans" },
   {
     title: "Clients",
@@ -183,8 +182,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     )
   );
 
-  console.log();
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <SnackbarProvider
@@ -218,6 +215,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   borderRight: "solid 1px rgb(229, 231, 235)",
                 }}
               >
+                <Link
+                  key={"home-tab"}
+                  className="border-gray-200"
+                  href={`/dashboard`}
+                >
+                  <NavButton
+                    text="Home"
+                    icon={<HomeIcon height={20} />}
+                    active={["/dashboard", "/dashboard/"].includes(pathName)}
+                    hideText={hide}
+                  />
+                </Link>
                 {navItems.map((navItem, index) => (
                   <Link
                     key={index}
@@ -227,10 +236,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <NavButton
                       text={navItem.title}
                       icon={navItem.icon}
-                      active={
-                        pathName ===
+                      active={pathName.startsWith(
                         `/dashboard${navItem.path ? "/" + navItem.path : ""}`
-                      }
+                      )}
                       hideText={hide}
                     />
                   </Link>
@@ -267,6 +275,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
 
                 <div className="flex-grow flex flex-col p-2 gap-2">
+                  <Link
+                    key={"home-tab"}
+                    className="border-gray-200"
+                    href={`/dashboard`}
+                  >
+                    <NavButton
+                      text="Home"
+                      icon={<HomeIcon height={20} />}
+                      active={["/dashboard", "/dashboard/"].includes(pathName)}
+                      hideText={hide}
+                    />
+                  </Link>
                   {navItems.map((navItem, index) => (
                     <Link
                       key={index}
@@ -295,7 +315,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Drawer>
               <div className="flex-grow relative bg-gray-100">
                 <div className="vertical-scrollbar absolute inset-y-0 left-0 right-1 flex flex-col">
-                  <div className="px-4 pt-4">
+                  <div className="px-4 py-4 sticky top-0 z-50 bg-gray-100">
                     <Breadcrumbs
                       separator={<NavigateNextIcon fontSize="small" />}
                       aria-label="breadcrumb"

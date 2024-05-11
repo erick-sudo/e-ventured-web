@@ -16,6 +16,9 @@ export const apis = {
     deleteLoan: `${baseUrl}/loans/<:loanId>`,
     approveLoan: `${baseUrl}/loans/<:loanId>`,
   },
+  repayments: {
+    countLoanRepayments: `${baseUrl}/loans/collections/<:loanId>/count`,
+  },
   clients: {
     elasticSearch: `${baseUrl}/clients/elastic/search`,
   },
