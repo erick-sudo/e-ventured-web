@@ -1,4 +1,5 @@
-import { fetchPageCount } from "@/app/lib/data";
+import { apis } from "@/app/lib/apis";
+import { countEntities } from "@/app/lib/data";
 import { LoansTable } from "@/app/ui/loans/loans-table";
 import PageResizer from "@/app/ui/page-resizer";
 import Pagination from "@/app/ui/pagination";
@@ -16,7 +17,7 @@ export default async function Page({
   const page = Number(searchParams?.page) || 1;
   const size = Number(searchParams?.size) || 10;
 
-  const population = await fetchPageCount(size);
+  const population = await countEntities(apis.loans.count);
 
   return (
     <div className="mx-4 my-6 grow">

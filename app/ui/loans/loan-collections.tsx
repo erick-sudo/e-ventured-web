@@ -1,65 +1,67 @@
 import { fetchLoanRepayments, fetchNumberOfRepayments } from "@/app/lib/data";
-import React, { Suspense } from "react";
+import React from "react";
 import { LoanCollectionsSkeleton } from "../skeletons";
-import Pagination from "../pagination";
 import { formatCurrency } from "@/app/lib/utils";
+import EVPagination, { EVTable } from "../ev-pagination";
+import { LoanCollectionOut } from "@/app/lib/definitions";
 
-async function LoanCollections({
-  loanId,
-  searchParams,
-}: {
-  loanId: string;
-  searchParams?: {
-    query?: string;
-    page?: string;
-    size?: string;
-  };
-}) {
-  //const query = searchParams?.query || "";
-  const page = Number(searchParams?.page) || 1;
-  const size = Number(searchParams?.size) || 10;
+async function LoanCollections({ loanId }: { loanId: string }) {
   const numberOfRepayments = await fetchNumberOfRepayments(loanId);
-  const repayments = await fetchLoanRepayments(loanId, page, size);
 
   return (
-    <Suspense fallback={<LoanCollectionsSkeleton />}>
-      <div className="bg-white p-4 shadow">
-        <h4 className="text-lg font-semibold mb-4">Loan Collections</h4>
-        <div className="horizontal-scrollbar pt-2 pb-4">
-          <table className="w-full">
-            <thead>
-              <tr className="">
-                <th className="text-start px-2">Paid Amount</th>
-                <th className="text-start px-2">Collection Date</th>
-                <th className="text-start px-2">Time</th>
-                <th className="text-start px-2">Payment Method</th>
-              </tr>
-            </thead>
-            <tbody>
-              {repayments.map((repayment, idx) => (
-                <tr key={idx} className="border-b">
-                  <td className="text-start px-2 py-2">
-                    {formatCurrency(repayment.amount)}
-                  </td>
-                  <td className="text-start px-2 py-2">
-                    {new Date(repayment.collection_date).toDateString()}
-                  </td>
-                  <td className="text-start px-2 py-2">
-                    {new Date(repayment.collection_date).toTimeString()}
-                  </td>
-                  <td className="text-start px-2 py-2">
-                    {repayment.payment_method}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="flex justify-center">
-          <Pagination totalPages={Math.ceil(numberOfRepayments.count / size)} />
-        </div>
-      </div>
-    </Suspense>
+    <EVPagination<
+      LoanCollectionOut,
+      {
+        className?: string;
+        renderHeader: () => React.ReactNode;
+      }
+    >
+      Title={() => (
+        <h4 className="text-lg font-semibold mb-4 sticky left-0">
+          Loan Collections
+        </h4>
+      )}
+      className="bg-white px-4 py-8 shadow horizontal-scrollbar"
+      viewPortClassName="min-h-[20vh]"
+      fallback={<LoanCollectionsSkeleton />}
+      fetchData={async (page, size) =>
+        await fetchLoanRepayments(loanId, page, size)
+      }
+      count={numberOfRepayments.count}
+      initialItemsPerPage={4}
+      OtherItemsContainerProps={{
+        className: "w-full",
+        renderHeader: () => (
+          <tr className="">
+            <th className="text-start px-2 whitespace-nowrap">Paid Amount</th>
+            <th className="text-start px-2 whitespace-nowrap">
+              Collection Date
+            </th>
+            <th className="text-start px-2 whitespace-nowrap">Time</th>
+            <th className="text-start px-2 whitespace-nowrap">
+              Payment Method
+            </th>
+          </tr>
+        ),
+      }}
+      ItemsContainer={EVTable<LoanCollectionOut>}
+      renderItem={(repayment: LoanCollectionOut, index: number) => (
+        <tr key={index} className="border-b">
+          <td className="text-start px-2 py-2 whitespace-nowrap">
+            {formatCurrency(repayment.amount)}
+          </td>
+          <td className="text-start px-2 py-2 whitespace-nowrap">
+            {new Date(repayment.collection_date).toDateString()}
+          </td>
+          <td className="text-start px-2 py-2 whitespace-nowrap">
+            {new Date(repayment.collection_date).toTimeString()}
+          </td>
+          <td className="text-start px-2 py-2 whitespace-nowrap">
+            {repayment.payment_method}
+          </td>
+        </tr>
+      )}
+    />
   );
 }
 

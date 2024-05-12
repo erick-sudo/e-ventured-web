@@ -1,9 +1,7 @@
 import { ClientDto } from "@/app/lib/definitions";
 import {
-  EnvelopeIcon,
   EnvelopeOpenIcon,
   PhoneArrowDownLeftIcon,
-  UserCircleIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
 

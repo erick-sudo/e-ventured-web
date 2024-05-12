@@ -8,31 +8,25 @@ import {
 } from "./definitions";
 import axios from "axios";
 
-export async function fetchPageCount(size: number): Promise<EndpointCount> {
+export async function countEntities(endpoint: string): Promise<EndpointCount> {
   return await axios
-    .get(apis.loans.count)
+    .get(endpoint)
     .then((response) => response.data)
     .catch((axiosError) => {
-      throw Error(
-        "Could not fetch loans info. Please check your connection and try again"
-      );
+      throw Error(axiosError.message);
     });
 }
 
-export async function fetchLoans(
-  pageNumber: number,
-  pageSize: number
-): Promise<Array<LoanOut>> {
+export async function fetchPage<T>(
+  endpoint: string,
+  description: string
+): Promise<Array<T>> {
   return await axios
-    .get(
-      apis.loans.loansPagination
-        .replace("<:pageNumber>", pageNumber + "")
-        .replace("<:pageSize>", pageSize + "")
-    )
+    .get(endpoint)
     .then((response) => response.data)
     .catch((e) => {
       throw Error(
-        "Could not fetch loans. Please check your connection and try again"
+        `An error occured while ${description}. Please check your connection and try again`
       );
     });
 }

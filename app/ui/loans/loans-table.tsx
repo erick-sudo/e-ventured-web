@@ -1,4 +1,4 @@
-import { fetchLoans } from "@/app/lib/data";
+import { fetchPage } from "@/app/lib/data";
 import { LoanStatus } from "./loan-status";
 import { formatCurrency } from "@/app/lib/utils";
 import Search from "../search";
@@ -6,16 +6,14 @@ import { EButton } from "./buttons";
 import {
   ArrowDownCircleIcon,
   ArrowDownIcon,
-  ArrowRightIcon,
   ArrowUpCircleIcon,
-  MagnifyingGlassCircleIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { ArrowUpIcon } from "@heroicons/react/16/solid";
-import LoanApprovalModal from "./approval-modal";
 import { LoanOut } from "@/app/lib/definitions";
 import { IconButton } from "@mui/material";
+import { apis } from "@/app/lib/apis";
 
 const headers = [
   { key: "Client", sortable: true },
@@ -40,7 +38,12 @@ export async function LoansTable({
   page: number;
   size: number;
 }) {
-  const loans: LoanOut[] = await fetchLoans(page, size);
+  const loans: LoanOut[] = await fetchPage<LoanOut>(
+    apis.loans.loansPagination
+      .replace("<:pageNumber>", page + "")
+      .replace("<:pageSize>", size + ""),
+    "fetcing loans"
+  );
 
   return (
     <div className="my-4 p-2 grow flex flex-col gap-3">

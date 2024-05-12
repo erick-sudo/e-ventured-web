@@ -21,6 +21,8 @@ export const apis = {
   },
   clients: {
     elasticSearch: `${baseUrl}/clients/elastic/search`,
+    count: `${baseUrl}/clients/stats/count`,
+    clientsPagination: `${baseUrl}/clients/pagination/<:pageNumber>/<:pageSize>`,
   },
   loanOfficers: {
     elasticSearch: `${baseUrl}/loan-officers/elastic/search`,

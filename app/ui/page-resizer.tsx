@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import React from "react";
 
 export default function PageResizer({}) {
   const searchParams = useSearchParams();
@@ -31,6 +32,28 @@ export default function PageResizer({}) {
       <label htmlFor="search" className="">
         Per Page
       </label>
+    </div>
+  );
+}
+
+export function StateDrivenPageResizer({
+  className,
+  value,
+  onChange,
+}: {
+  className?: string;
+  value?: number | string | readonly string[];
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div className={`${className}`}>
+      <input
+        value={value}
+        onChange={onChange}
+        type="number"
+        className="text-center w-14 h-8 ring-2 ring-gray-300 outline-indigo-700"
+      />
+      <label className="">Per Page</label>
     </div>
   );
 }
