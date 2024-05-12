@@ -36,60 +36,36 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ```jsx
-<AppBar className="bg-teal-800" position="fixed" open={open}>
-  <Toolbar className="flex">
-    <IconButton
-      color="inherit"
-      aria-label="open drawer"
-      onClick={handleDrawerOpen}
-      edge="start"
-      sx={{
-        marginRight: 5,
-        ...(open && { display: "none" }),
-      }}
-    >
-      <MenuIcon />
-    </IconButton>
-    <Typography className="w-full" variant="h6" noWrap component="div">
-      Entry Ventures
-    </Typography>
-    <Box className="" sx={{ flexGrow: 0 }}>
-      <Tooltip title="Account">
-        <IconButton onClick={() => {}} sx={{ p: 0 }}>
-          <Avatar alt="Wemy Sharp" src="/static/images/avatar/2.jpg" />
-        </IconButton>
-      </Tooltip>
-      <Menu
-        sx={{ mt: "45px" }}
-        id="menu-appbar"
-        // anchorEl={anchorElUser}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        keepMounted
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        open={false}
-        // open={Boolean(anchorElUser)}
-        // onClose={handleCloseUserMenu}
-      >
-        {accountActions.map((action, index) => (
-          <MenuItem
-            className="pr-[5em] group hover:text-teal-800"
-            title={action.title}
-            key={index}
-          >
-            <IconButton className="group-hover:text-teal-800">
-              {action.icon}
-            </IconButton>
-            <Typography textAlign="center">{action.title}</Typography>
-          </MenuItem>
-        ))}
-      </Menu>
-    </Box>
-  </Toolbar>
-</AppBar>
+<Tooltip
+  title={
+    <div>
+      {navItem.submenu.items.map((subMenuItem, idx) => (
+        <Link
+          key={idx}
+          className="border-gray-200"
+          href={`/dashboard/${subMenuItem.path}`}
+        >
+          <NavButton
+            text={subMenuItem.title}
+            icon={subMenuItem.icon}
+            active={pathName.startsWith(
+              `/dashboard${subMenuItem.path ? "/" + navItem.path : ""}`
+            )}
+            hideText={hide}
+          />
+        </Link>
+      ))}
+    </div>
+  }
+  placement="right-end"
+>
+  <NavButton
+    text={navItem.title}
+    icon={navItem.icon}
+    active={pathName.startsWith(
+      `/dashboard${navItem.path ? "/" + navItem.path : ""}`
+    )}
+    hideText={hide}
+  />
+</Tooltip>
 ```

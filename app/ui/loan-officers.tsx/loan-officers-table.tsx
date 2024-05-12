@@ -2,39 +2,43 @@
 
 import Search from "../search";
 import EVPagination, { EVTable } from "../ev-pagination";
-import { ClientDto } from "@/app/lib/definitions";
+import { LoanOfficerDto } from "@/app/lib/definitions";
 import { fetchPage } from "@/app/lib/data";
 import { apis } from "@/app/lib/apis";
 import SpringModal from "../spring-modal";
-import CreateClientForm from "./create-client-form";
+import CreateLoanOfficerForm from "./create-loan-officer-form";
 
-export default function ClientsTable({ count }: { count: number }) {
+export default function LoanOfficersTable({ count }: { count: number }) {
   return (
     <div className="my-4 p-2 grow flex flex-col gap-3">
       <div className="flex gap-2">
         <Search placeholder="Search clients..." />
         <SpringModal
           anchorClassName="bg-indigo-600 text-[#fff] hover:bg-indigo-700/10 hover:text-indigo-700 duration-300 cursor-pointer px-4 py-1"
-          anchorContent="New Client"
+          anchorContent="New Loan Officer"
           className="bg-white absolute p-4 border z-50 w-[30rem] top-[50%] -translate-y-[50%] left-[50%] -translate-x-[50%]"
         >
-          <CreateClientForm />
+          <CreateLoanOfficerForm />
         </SpringModal>
       </div>
       <EVPagination<
-        ClientDto,
+        LoanOfficerDto,
         {
           className?: string;
           renderHeader: () => React.ReactNode;
         }
       >
-        Title={() => <h4 className="text-xl py-2 font-bold text-indigo-800">Clients</h4>}
+        Title={() => (
+          <h4 className="text-xl py-2 font-bold text-indigo-800">
+            Loan Officers
+          </h4>
+        )}
         className="bg-white px-4 pb-8 pt-4 shadow horizontal-scrollbar"
         viewPortClassName="min-h-[20vh]"
         fallback={<h4 className="p-12 text-2xl font-extrabold">Loading...</h4>}
         fetchData={async (page, size) =>
-          await fetchPage<ClientDto>(
-            apis.clients.clientsPagination
+          await fetchPage<LoanOfficerDto>(
+            apis.loanOfficers.loanOfficersPagination
               .replace("<:pageNumber>", page + "")
               .replace("<:pageSize>", size + ""),
             "fetching clients"
@@ -56,8 +60,8 @@ export default function ClientsTable({ count }: { count: number }) {
             </tr>
           ),
         }}
-        ItemsContainer={EVTable<ClientDto>}
-        renderItem={(client: ClientDto, index: number) => (
+        ItemsContainer={EVTable<LoanOfficerDto>}
+        renderItem={(client: LoanOfficerDto, index: number) => (
           <tr key={index} className="border-b">
             <td className="text-start px-2 py-2 whitespace-nowrap">
               {client.name}

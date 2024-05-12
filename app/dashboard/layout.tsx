@@ -12,11 +12,11 @@ import {
   Drawer,
   Menu,
   MenuItem,
+  Tooltip,
   styled,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import Tooltip from "@mui/material/Tooltip";
 import Avatar from "@mui/material/Avatar";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -37,10 +37,12 @@ import {
   UsersIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Link from "next/link";
 import { MaterialDesignContent, SnackbarProvider } from "notistack";
 import AppProvider from "./context";
 import { capitalize } from "../lib/utils";
+import { HtmlTooltip } from "../ui/tooltips";
 
 interface NavButtonProps {
   text: string;
@@ -64,7 +66,7 @@ const NavButton: React.FC<NavButtonProps> = function ({
 
   return (
     <ListItemButton
-      className="hover:bg-indigo-600/10 hover:text-indigo-700 duration-300"
+      className={`hover:bg-indigo-600/10 hover:text-indigo-700 duration-300`}
       selected={active}
       sx={{
         flexGrow: 0,
@@ -102,9 +104,28 @@ const NavButton: React.FC<NavButtonProps> = function ({
 const navItems = [
   { title: "Loans", icon: <CurrencyDollarIcon height={20} />, path: "loans" },
   {
-    title: "Clients",
+    title: "Users",
     icon: <UsersIcon height={20} />,
-    path: "clients",
+    path: "users",
+    submenu: {
+      items: [
+        {
+          title: "Administrators",
+          icon: <AdminPanelSettingsIcon />,
+          path: "users/administrators",
+        },
+        {
+          title: "Loan Officers",
+          icon: <AdminPanelSettingsIcon />,
+          path: "users/loan-officers",
+        },
+        {
+          title: "Clients",
+          icon: <AdminPanelSettingsIcon />,
+          path: "users/clients",
+        },
+      ],
+    },
   },
   {
     title: "Settings",
@@ -215,11 +236,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   borderRight: "solid 1px rgb(229, 231, 235)",
                 }}
               >
-                <Link
-                  key={"home-tab"}
-                  className="border-gray-200"
-                  href={`/dashboard`}
-                >
+                <Link key={"home-tab"} href={`/dashboard`}>
                   <NavButton
                     text="Home"
                     icon={<HomeIcon height={20} />}
@@ -227,22 +244,67 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     hideText={hide}
                   />
                 </Link>
-                {navItems.map((navItem, index) => (
-                  <Link
-                    key={index}
-                    className="border-gray-200"
-                    href={`/dashboard/${navItem.path}`}
-                  >
-                    <NavButton
-                      text={navItem.title}
-                      icon={navItem.icon}
-                      active={pathName.startsWith(
-                        `/dashboard${navItem.path ? "/" + navItem.path : ""}`
-                      )}
-                      hideText={hide}
-                    />
-                  </Link>
-                ))}
+                {navItems.map((navItem, index) =>
+                  navItem.submenu ? (
+                    <HtmlTooltip
+                      arrow
+                      slotProps={{
+                        arrow: {
+                          sx: {
+                            color: "white",
+                          },
+                        },
+                      }}
+                      title={
+                        <div className="py-2">
+                          {navItem.submenu.items.map((subMenuItem, idx) => (
+                            <Link
+                              style={{
+                                display: "block",
+                              }}
+                              replace={true}
+                              key={idx}
+                              className="text-indigo-800"
+                              href={`/dashboard/${subMenuItem.path}`}
+                            >
+                              <NavButton
+                                text={subMenuItem.title}
+                                icon={subMenuItem.icon}
+                                active={false}
+                                hideText={false}
+                              />
+                            </Link>
+                          ))}
+                        </div>
+                      }
+                      placement="right-end"
+                    >
+                      <div>
+                        <NavButton
+                          text={navItem.title}
+                          icon={navItem.icon}
+                          active={pathName.startsWith(
+                            `/dashboard${
+                              navItem.path ? "/" + navItem.path : ""
+                            }`
+                          )}
+                          hideText={hide}
+                        />
+                      </div>
+                    </HtmlTooltip>
+                  ) : (
+                    <Link key={index} href={`/dashboard/${navItem.path}`}>
+                      <NavButton
+                        text={navItem.title}
+                        icon={navItem.icon}
+                        active={pathName.startsWith(
+                          `/dashboard${navItem.path ? "/" + navItem.path : ""}`
+                        )}
+                        hideText={hide}
+                      />
+                    </Link>
+                  )
+                )}
                 <div className="flex-grow"></div>
                 <NavButton
                   hideText={hide}

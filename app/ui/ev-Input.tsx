@@ -8,7 +8,7 @@ interface EvInputProps {
   className?: string;
   labelClassName?: string;
   inputClassName?: string;
-  type?: "text" | "number";
+  type?: "text" | "number" | "email" | "password";
   name?: string;
   value: string | number | readonly string[];
   onChange: (v: string) => void;

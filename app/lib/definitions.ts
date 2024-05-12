@@ -50,6 +50,23 @@ export type LoanMiniStatement = {
   info: LoanInfo;
 };
 
+export interface Authenticatable {
+  password: string;
+  confirm_password: string;
+}
+
+export interface UserIn {
+  name: string;
+  email: string;
+  phone: string;
+}
+
+export interface CreateUser extends UserIn, Authenticatable {}
+
+export interface ClientIn extends UserIn {}
+
+export interface LoanOfficerIn extends UserIn {}
+
 export type ClientDto = {
   id: string;
   name: string;

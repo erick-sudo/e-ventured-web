@@ -26,6 +26,8 @@ export const apis = {
   },
   loanOfficers: {
     elasticSearch: `${baseUrl}/loan-officers/elastic/search`,
+    count: `${baseUrl}/loan-officers/stats/count`,
+    loanOfficersPagination: `${baseUrl}/loan-officers/pagination/<:pageNumber>/<:pageSize>`,
   },
   vaults: {
     elasticSearch: `${baseUrl}/vaults/elastic/search`,
