@@ -38,6 +38,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import ContactPageIcon from "@mui/icons-material/ContactPage";
 import Link from "next/link";
 import { MaterialDesignContent, SnackbarProvider } from "notistack";
 import AppProvider from "./context";
@@ -116,12 +118,12 @@ const navItems = [
         },
         {
           title: "Loan Officers",
-          icon: <AdminPanelSettingsIcon />,
+          icon: <ManageAccountsIcon />,
           path: "users/loan-officers",
         },
         {
           title: "Clients",
-          icon: <AdminPanelSettingsIcon />,
+          icon: <ContactPageIcon />,
           path: "users/clients",
         },
       ],
@@ -247,6 +249,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 {navItems.map((navItem, index) =>
                   navItem.submenu ? (
                     <HtmlTooltip
+                      key={index}
                       arrow
                       slotProps={{
                         arrow: {
@@ -263,7 +266,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 display: "block",
                               }}
                               replace={true}
-                              key={idx}
+                              key={`${index}#${idx}`}
                               className="text-indigo-800"
                               href={`/dashboard/${subMenuItem.path}`}
                             >
@@ -349,22 +352,72 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       hideText={hide}
                     />
                   </Link>
-                  {navItems.map((navItem, index) => (
-                    <Link
-                      key={index}
-                      style={{ width: "100%" }}
-                      href={`/dashboard/${navItem.path}`}
-                    >
-                      <NavButton
-                        icon={navItem.icon}
-                        text={navItem.title}
-                        active={pathName.startsWith(
-                          `/dashboard/${navItem.path}`
-                        )}
-                        hideText={false}
-                      />
-                    </Link>
-                  ))}
+                  {navItems.map((navItem, index) =>
+                    navItem.submenu ? (
+                      <HtmlTooltip
+                        key={index}
+                        arrow
+                        slotProps={{
+                          arrow: {
+                            sx: {
+                              color: "white",
+                            },
+                          },
+                        }}
+                        title={
+                          <div className="py-2">
+                            {navItem.submenu.items.map((subMenuItem, idx) => (
+                              <Link
+                                style={{
+                                  display: "block",
+                                }}
+                                replace={true}
+                                key={idx}
+                                className="text-indigo-800"
+                                href={`/dashboard/${subMenuItem.path}`}
+                              >
+                                <NavButton
+                                  text={subMenuItem.title}
+                                  icon={subMenuItem.icon}
+                                  active={false}
+                                  hideText={false}
+                                />
+                              </Link>
+                            ))}
+                          </div>
+                        }
+                        placement="right-end"
+                      >
+                        <div>
+                          <NavButton
+                            text={navItem.title}
+                            icon={navItem.icon}
+                            active={pathName.startsWith(
+                              `/dashboard${
+                                navItem.path ? "/" + navItem.path : ""
+                              }`
+                            )}
+                            hideText={hide}
+                          />
+                        </div>
+                      </HtmlTooltip>
+                    ) : (
+                      <Link
+                        key={index}
+                        style={{ width: "100%" }}
+                        href={`/dashboard/${navItem.path}`}
+                      >
+                        <NavButton
+                          icon={navItem.icon}
+                          text={navItem.title}
+                          active={pathName.startsWith(
+                            `/dashboard/${navItem.path}`
+                          )}
+                          hideText={false}
+                        />
+                      </Link>
+                    )
+                  )}
                   <div className="flex-grow"></div>
 
                   <NavButton

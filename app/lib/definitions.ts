@@ -50,6 +50,15 @@ export type LoanMiniStatement = {
   info: LoanInfo;
 };
 
+interface LoanDisbursementScheduleOut {
+  id: string;
+  client: string;
+  amount: number;
+  processed: boolean;
+  created_at: string;
+  processed_at?: string;
+}
+
 export interface Authenticatable {
   password: string;
   confirm_password: string;
