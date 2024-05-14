@@ -3,15 +3,13 @@
 import React, { useState } from "react";
 import TrendingUp from "@mui/icons-material/TrendingUp";
 import clsx from "clsx";
-import Chart from "react-apexcharts";
+import { ApexChart } from "@/app/ui/charts";
 import { EButton } from "@/app/ui/loans/buttons";
 import { formatCurrency } from "@/app/lib/utils";
 import {
-  ArrowRightIcon,
   BanknotesIcon,
   CircleStackIcon,
 } from "@heroicons/react/24/outline";
-import TextsmsIcon from "@mui/icons-material/Textsms";
 import SellIcon from "@mui/icons-material/Sell";
 const schedules = [
   {
@@ -124,6 +122,19 @@ export default function Dashboard() {
         show: false,
       },
     },
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 800,
+      animateGradually: {
+        enabled: true,
+        delay: 150,
+      },
+      dynamicAnimation: {
+        enabled: true,
+        speed: 350,
+      },
+    },
     dataLabels: {
       enabled: false,
     },
@@ -182,26 +193,22 @@ export default function Dashboard() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="px-6 py-2 flex items-center bg-gradient-to-tr from-indigo-900 via-indigo-700 to-indigo-950 shadow shadow-black text-white">
+        <div className="px-6 py-2 flex items-center bg-white shadow border">
           <div className="flex-grow flex items-center">
             <h4 className="text-lg font-semibold">Available Credits</h4>
             <h4 className="px-4 font-extrabold py-2">234</h4>
-            <button className="px-4 flex items-center gap-4 py-2 bg-indigo-600 hover:bg-indigo-500 duration-300">
+            <button className="px-4 text-sm flex items-center gap-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white duration-300">
               <span>Purchase SMS</span>
-              <ArrowRightIcon height={16} />
             </button>
           </div>
-          <span className="text-5xl">
-            <TextsmsIcon fontSize="inherit" />
-          </span>
         </div>
-        <div className="px-6 py-2 flex items-center bg-gradient-to-tr from-amber-900 via-amber-700 to-amber-950 shadow shadow-black text-white">
+        <div className="px-6 py-2 flex items-center bg-white shadow border">
           <div className="flex-grow flex items-center">
             <h4 className="text-lg font-semibold">Arrears</h4>
             <h4 className="px-4 font-extrabold py-2">KSH145,638.00</h4>
             <div>Due Amount</div>
           </div>
-          <span className="text-5xl">
+          <span className="text-sm">
             <SellIcon fontSize="inherit" />
           </span>
         </div>
@@ -233,7 +240,13 @@ export default function Dashboard() {
               Weekly
             </EButton>
           </div>
-          <Chart options={options} series={series} type="area" height={400} />
+          <ApexChart
+            options={options}
+            series={series}
+            type="area"
+            height={400}
+            width={"100%"}
+          />
         </div>
         <div className="grid gap-4">
           <div className="bg-white p-4 shadow">
@@ -287,7 +300,7 @@ export default function Dashboard() {
       <div className="grid xl:grid-cols-3 gap-4">
         <div className="bg-white shadow p-4">
           <h4 className="text-indigo-800 font-bold text-lg">Status Tally</h4>
-          <Chart
+          <ApexChart
             options={{
               ...loanStatusTally.chartOptions,
               colors: [
@@ -314,6 +327,7 @@ export default function Dashboard() {
             series={loanStatusTally.series}
             type="donut"
             height={350}
+            width={"100%"}
           />
         </div>
         <div className="bg-white shadow p-4 xl:col-span-2">

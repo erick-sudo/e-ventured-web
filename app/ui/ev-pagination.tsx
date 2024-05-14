@@ -50,7 +50,7 @@ function EVPagination<T, P>({
     if (itemsPerPage) {
       fetchPageData();
     }
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, itemsPerPage, fetchData]);
 
   const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);

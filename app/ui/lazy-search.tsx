@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { joinArrays } from "../lib/utils";
 import axios from "axios";
@@ -29,16 +29,19 @@ export function LazySearch<T extends { [key: string]: string | number }>({
   const [search, setSearch] = useState<string>("");
   const [searching, setSearching] = useState(false);
 
-  const fetchItems = async function (search: string): Promise<Array<T>> {
-    return await axios
-      .post(endpoint, {
-        query: search,
-      })
-      .then((res) => res.data)
-      .catch((axiosError) => {
-        throw new Error(axiosError.message);
-      });
-  };
+  const fetchItems = useCallback(
+    async function (search: string): Promise<Array<T>> {
+      return await axios
+        .post(endpoint, {
+          query: search,
+        })
+        .then((res) => res.data)
+        .catch((axiosError) => {
+          throw new Error(axiosError.message);
+        });
+    },
+    [endpoint]
+  );
 
   useEffect(() => {
     const fetchItemsAsync = async () => {
@@ -52,7 +55,7 @@ export function LazySearch<T extends { [key: string]: string | number }>({
     } else {
       setItems([]);
     }
-  }, [search]);
+  }, [search, fetchItems, fieldNames]);
 
   return (
     <div className={`relative h-12`}>
@@ -74,17 +77,17 @@ export function LazySearch<T extends { [key: string]: string | number }>({
           />
           <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
           <div className="absolute top-full inset-x-0">
-          <LinearProgress
-            sx={{
-              opacity: searching ? 1 : 0,
-              "& .MuiLinearProgress-bar": {
-                backgroundColor: "rgb(70, 79, 241)",
-              },
-            }}
-          />
+            <LinearProgress
+              sx={{
+                opacity: searching ? 1 : 0,
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "rgb(70, 79, 241)",
+                },
+              }}
+            />
+          </div>
         </div>
-        </div>
-        
+
         <div className="grid gap-2 pl-1">
           {items.map((item, idx) => (
             <div
@@ -95,7 +98,9 @@ export function LazySearch<T extends { [key: string]: string | number }>({
                   setSearch("");
                 }
               }}
-              className={`${idx === 0 && "mt-4"} border-l-4 px-4 py-1 cursor-pointer ${childHoverClassName}`}
+              className={`${
+                idx === 0 && "mt-4"
+              } border-l-4 px-4 py-1 cursor-pointer ${childHoverClassName}`}
               key={idx}
             >
               {fieldNames.map((field, idx2) => (
