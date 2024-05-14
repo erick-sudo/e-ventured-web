@@ -42,12 +42,12 @@ function Page() {
   const [vault, setVault] = useState<VaultDto>();
 
   return (
-    <div className="p-4">
+    <div className="p-2">
       <Typography variant="h5" component="div" className="px-4">
         Open Loan
       </Typography>
 
-      <form className="grid gap-4 p-4 max-w-3xl lg:max-w-7xl">
+      <form className="grid gap-4 max-w-3xl lg:max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2">
             <EVInput

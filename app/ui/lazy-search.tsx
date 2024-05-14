@@ -37,7 +37,8 @@ export function LazySearch<T extends { [key: string]: string | number }>({
         })
         .then((res) => res.data)
         .catch((axiosError) => {
-          throw new Error(axiosError.message);
+          // throw new Error(axiosError.message);
+          return [];
         });
     },
     [endpoint]
