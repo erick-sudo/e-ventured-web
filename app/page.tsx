@@ -1,10 +1,10 @@
 import Image from "next/image";
-import NavigationBar from "./ui/nav-bar";
+import LandingPage from "./ui/landing-page";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      <NavigationBar />
+    <main className="min-h-screen flex">
+      <LandingPage />
     </main>
   );
 }
