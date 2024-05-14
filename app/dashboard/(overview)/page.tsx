@@ -9,8 +9,10 @@ import { formatCurrency } from "@/app/lib/utils";
 import {
   BanknotesIcon,
   CircleStackIcon,
+  ClockIcon,
 } from "@heroicons/react/24/outline";
 import SellIcon from "@mui/icons-material/Sell";
+import dayjs from "dayjs";
 const schedules = [
   {
     id: "1",
@@ -334,22 +336,55 @@ export default function Dashboard() {
           <h4 className="text-indigo-800 font-bold text-lg">
             Recently Updated Disbursements
           </h4>
-          <div className="pb-2">
+          <div className="p-2">
             {[...schedules, ...schedules].map((schedule, idx) => (
-              <div key={idx} className="flex items-center">
-                <div
-                  className={clsx("h-2 w-2 rounded-full", {
-                    "bg-amber-700": idx % 2 === 0,
-                    "bg-indigo-700": idx % 2 !== 0,
-                  })}
-                ></div>
-                <div className="flex-grow grid grid-cols-4 border-b">
-                  <div className="px-4 py-2">{schedule.client}</div>
-                  <div className="px-4 py-2">
-                    {formatCurrency(schedule.amount)}
+              <div key={idx} className="flex items-center py-1 border-b">
+                <div className="flex-grow grid grid-cols-2">
+                  <div className="grid xl:grid-cols-2 items-center">
+                    <div className="px-4 flex items-center gap-2">
+                      <span
+                        className={clsx("h-2 w-2 rounded-full block", {
+                          "bg-amber-700": idx % 2 === 0,
+                          "bg-indigo-700": idx % 2 !== 0,
+                        })}
+                      ></span>
+                      <span className=" truncate">{schedule.client}</span>
+                    </div>
+                    <div className="px-4">
+                      {formatCurrency(schedule.amount)}
+                    </div>
                   </div>
-                  <div className="px-4 py-2">{schedule.created_at}</div>
-                  <div className="px-4 py-2">{schedule.processed_at}</div>
+                  <div className="grid md:grid-cols-2">
+                    <div className="px-4 grid xl:grid-cols-2 items-center">
+                      <span>
+                        {dayjs(schedule.created_at).format("DD/MM/YYYY")}
+                      </span>
+                      <span>
+                        {dayjs(schedule.created_at).format("HH:mm:ss")}
+                      </span>
+                    </div>
+                    <div className="px-4 grid">
+                      <div className="px-4 flex flex-col justify-center">
+                        {schedule.processed_at ? (
+                          <div className="grid xl:grid-cols-2">
+                            <span>
+                              {dayjs(schedule.processed_at).format(
+                                "DD/MM/YYYY"
+                              )}
+                            </span>
+                            <span>
+                              {dayjs(schedule.processed_at).format("HH:mm:ss")}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="text-xs text-gray-500 font-bold flex items-center gap-2 border rounded-full px-2 py-1 w-max">
+                            <ClockIcon height={20} />
+                            <span>unprocessed</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
