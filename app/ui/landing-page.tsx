@@ -1,14 +1,26 @@
+import Link from "next/link";
 import React from "react";
 
 export default function LandingPage() {
   return (
     <div className="bg-gray-100 flex flex-col flex-grow">
       <header className="bg-white shadow">
-        <div className="container mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-indigo-700">Entry-Ventures</h1>
-          <p className="text-lg text-gray-600">
-            Your trusted partner for loans
-          </p>
+        <div className="container mx-auto lg:flex justify-between">
+          <div className="px-4 py-6">
+            <h1 className="text-3xl font-bold text-indigo-700">
+              Entry-Ventures
+            </h1>
+            <p className="text-lg text-gray-600">
+              Your trusted partner for loans
+            </p>
+          </div>
+          <div className="px-4 flex items-end justify-end">
+            <Link className="" href="/dashboard">
+              <button className="px-4 py-2 text-indigo-700 border-b-4 border-indigo-700 hover:bg-indigo-700/10 duration-300">
+                Admnistrator Dashboard
+              </button>
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -83,7 +95,8 @@ export default function LandingPage() {
       <footer className="bg-white py-6">
         <div className="container mx-auto px-4">
           <p className="text-center">
-            &copy; 2024 <span className="text-indigo-700">Entry Ventures.</span> All rights reserved.
+            &copy; 2024 <span className="text-indigo-700">Entry Ventures.</span>{" "}
+            All rights reserved.
           </p>
         </div>
       </footer>

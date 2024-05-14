@@ -13,7 +13,8 @@ export async function countEntities(endpoint: string): Promise<EndpointCount> {
     .get(endpoint)
     .then((response) => response.data)
     .catch((axiosError) => {
-      throw Error(axiosError.message);
+      // throw Error(axiosError.message);
+      return { count: 0 };
     });
 }
 
@@ -25,9 +26,10 @@ export async function fetchPage<T>(
     .get(endpoint)
     .then((response) => response.data)
     .catch((e) => {
-      throw Error(
-        `An error occured while ${description}. Please check your connection and try again`
-      );
+      // throw Error(
+      //   `An error occured while ${description}. Please check your connection and try again`
+      // );
+      return [];
     });
 }
 
@@ -41,9 +43,10 @@ export async function fetchNumberOfRepayments(
       if (axiosError?.response?.status === 404) {
         return null;
       } else {
-        throw Error(
-          "An error occurred while fetching this loan's number of repayments"
-        );
+        // throw Error(
+        //   "An error occurred while fetching this loan's number of repayments"
+        // );
+        return null;
       }
     });
 }
@@ -61,19 +64,14 @@ export async function fetchLoanRepayments(
         .replace("<:pageSize>", size + "")
     )
     .then((response) => {
-      console.log(
-        apis.loans.loanRepayments
-          .replace("<:loanId>", loanId)
-          .replace("<:pageNumber>", page + "")
-          .replace("<:pageSize>", size + "")
-      );
       return response.data;
     })
     .catch((axiosError) => {
       if (axiosError?.response?.status === 404) {
         return null;
       } else {
-        throw Error("An error occurred while fetching this loan collections");
+        // throw Error("An error occurred while fetching this loan collections");
+        return null;
       }
     });
 }
@@ -88,7 +86,8 @@ export async function fetchLoanMiniStatement(
       if (axiosError?.response?.status === 404) {
         return null;
       } else {
-        throw Error("An error occurred while fetching loan");
+        // throw Error("An error occurred while fetching loan");
+        return null;
       }
     });
 }
